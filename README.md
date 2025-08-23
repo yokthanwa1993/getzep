@@ -1,138 +1,173 @@
-# Zep Cloud MCP Server for Cursor
+# NEEZS AI Chatbot
 
-A TypeScript-based MCP (Model Context Protocol) server that provides AI-powered memory management capabilities for Cursor using Zep Cloud.
+A TypeScript AI chatbot with permanent memory using Zep Cloud and OpenAI ChatGPT.
 
-## Features
+## 🚀 Features
 
-- 🧠 **AI-Powered Memory Management** with Zep Cloud
-- 🔍 **Smart Memory Search** with entity extraction
-- 📊 **Knowledge Graph** built automatically
-- 💾 **Persistent Storage** on Zep Cloud
-- 📡 **MCP Compatible** for Cursor integration
+- **Permanent Memory**: Uses Zep Cloud for persistent conversation history
+- **AI Integration**: Powered by OpenAI ChatGPT (GPT-4o-mini)
+- **MCP Server**: Model Context Protocol server for AI assistants
+- **TypeScript**: Built with TypeScript and FastMCP framework
 
-## Setup
+## 📋 Prerequisites
 
-### 1. Install Dependencies
+- Node.js 18+ 
+- Zep Cloud API Key
+- OpenAI API Key
 
+## 🛠️ Installation
+
+1. **Clone the repository:**
+```bash
+git clone <your-repo-url>
+cd zep
+```
+
+2. **Install dependencies:**
 ```bash
 npm install
 ```
 
-### 2. Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-ZEP_API_KEY=your_zep_cloud_api_key_here
-```
-
-### 3. Build and Run
-
+3. **Set up environment variables:**
 ```bash
-# Development mode
-npm run dev
-
-# Production build
-npm run build
-npm start
+cp env.example .env
 ```
 
-## MCP Tools
-
-The server provides the following MCP tools:
-
-### Memory Operations
-- `add_memory` - Add memory to a session
-- `search_memory` - Search memories with AI-powered context
-- `get_memory` - Get all memories for a session
-- `delete_memory` - Delete all memories for a session
-
-## Usage Examples
-
-### Adding Memory
+Edit `.env` file with your API keys:
 ```bash
-# Using MCP protocol
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/call",
-  "params": {
-    "name": "add_memory",
-    "arguments": {
-      "sessionId": "user123",
-      "content": "User likes TypeScript and React"
-    }
-  }
-}
+# Required API Keys
+ZEP_API_KEY=your-zep-cloud-api-key-here
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Optional Configuration
+NEEZS_PROJECT_ID=your-project-id
+NEEZS_APP_NAME=NEEZS
+NEEZS_DEFAULT_USER_PREFIX=neezs_user_
+NEEZS_DEFAULT_THREAD_PREFIX=neezs_thread_
+NEEZS_AI_MODEL=gpt-4o-mini
+MCP_SERVER_HOST=localhost
+MCP_SERVER_PORT=8000
 ```
 
-### Searching Memory
+## 🚀 Usage
+
+### Local Development:
+
+#### Start NEEZS AI Chatbot:
 ```bash
-# Using MCP protocol
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/call",
-  "params": {
-    "name": "search_memory",
-    "arguments": {
-      "sessionId": "user123",
-      "query": "TypeScript",
-      "limit": 5
-    }
-  }
-}
+npm run start:ai
 ```
 
-## Cursor MCP Configuration
+#### Development mode:
+```bash
+npm run dev:ai
+```
 
-The project includes a local MCP configuration file (`.cursor/mcp.json`) that Cursor will automatically detect:
+### Docker Deployment:
 
+#### Using Docker Compose:
+```bash
+docker-compose up -d
+```
+
+#### Using Docker directly:
+```bash
+docker build -t neezs-ai-chatbot .
+docker run -p 8000:8000 --env-file .env neezs-ai-chatbot
+```
+
+### CapRover Deployment:
+
+1. **Push to GitHub** with the following files:
+   - `Dockerfile`
+   - `captain-definition`
+   - `docker-compose.yml`
+
+2. **In CapRover Dashboard:**
+   - Create new app
+   - Connect to your GitHub repository
+   - Set environment variables in CapRover dashboard:
+     - `ZEP_API_KEY`
+     - `OPENAI_API_KEY`
+     - `NEEZS_PROJECT_ID` (optional)
+     - `NEEZS_APP_NAME` (optional)
+
+3. **Deploy:**
+   - CapRover will automatically build and deploy using the Dockerfile
+
+## 🔧 MCP Server Configuration
+
+### For Cursor IDE:
 ```json
 {
   "mcpServers": {
-    "my-memory": {
-      "command": "node",
-      "args": ["./dist/mcp-server.js"]
+    "neezs-memory": {
+      "url": "http://localhost:8000/sse"
     }
   }
 }
 ```
 
-**Note:** Cursor will use this local configuration automatically when you open this project. No global configuration needed!
+## 🛠️ Available Tools
 
-## Project Structure
+### NEEZS AI Tools:
+- `neezs_ai_chat` - Chat with NEEZS AI using ChatGPT and Zep Memory
+- `neezs_knowledge_search` - Search NEEZS user's knowledge graph and memory
+- `neezs_memory_summary` - Get a summary of NEEZS user's memory and conversation history
+- `create_neezs_user` - Create a new user in NEEZS for AI chatbot
+- `create_neezs_session` - Create a new conversation session for NEEZS AI chatbot
+
+## 🧠 How It Works
+
+1. **User sends message** → Stored in Zep Cloud
+2. **Zep provides memory context** → Previous conversation summary
+3. **ChatGPT processes** → Uses context + new message
+4. **AI response** → Stored back in Zep Cloud
+5. **Permanent memory** → Available for future conversations
+
+## 📁 Project Structure
 
 ```
-├── .cursor/
-│   └── mcp.json          # Local MCP configuration
-├── src/
-│   └── mcp-server.ts # MCP server implementation
-├── dist/             # Compiled JavaScript files
-├── package.json      # Dependencies and scripts
-├── tsconfig.json     # TypeScript configuration
-└── README.md         # This file
+zep/
+├── neezs-ai-chatbot.ts    # Main NEEZS AI Chatbot server
+├── fastmcp/               # FastMCP framework
+├── package.json           # Dependencies and scripts
+├── tsconfig.json          # TypeScript configuration
+├── env.example            # Environment variables template
+├── .gitignore            # Git ignore rules
+├── Dockerfile             # Docker configuration for deployment
+├── captain-definition     # CapRover configuration
+├── docker-compose.yml     # Docker Compose for local testing
+├── .dockerignore          # Docker ignore rules
+└── README.md             # This file
 ```
 
-## Dependencies
+## 🔑 Getting API Keys
 
-- **@getzep/zep-cloud** - Zep Cloud client for AI-powered memory
-- **@modelcontextprotocol/sdk** - MCP protocol implementation
-- **dotenv** - Environment variables
-- **zod** - Schema validation
+### Zep Cloud API Key:
+1. Go to https://cloud.getzep.com/
+2. Create account or login
+3. Create new project "NEEZS"
+4. Go to Settings > API Keys
+5. Create new API key
 
-## Development
+### OpenAI API Key:
+1. Go to https://platform.openai.com/api-keys
+2. Login to OpenAI account
+3. Create new API key
 
-The MCP server communicates via stdio with Cursor. No HTTP server is needed.
+## 🤝 Contributing
 
-### Testing
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-Test the MCP server directly:
+## 📄 License
 
-```bash
-echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "add_memory", "arguments": {"sessionId": "test", "content": "Hello World"}}}' | node dist/mcp-server.js
-```
+This project is licensed under the MIT License.
 
-## License
+## 🆘 Support
 
-MIT
+For support, please open an issue in the GitHub repository.
