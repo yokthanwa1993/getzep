@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "zep-memory-neezs": {
+      "command": "node",
+      "args": ["./dist/mcp-server.js"],
+      "env": {
+        "ZEP_API_KEY": "z_1dWlkIjoiZGNkMzhmYzUtZDliNC00ZDZiLTgzMTEtNjgwYWVlYTNlZTRlIn0.jETJkOgkp27DUIvbFdUpRuKEhk873PWXUApNa82NyXY4DsQq-qCTij5sJcpGgxJbbkTcR3BaJDnwF32M7wS5Ow",
+        "PROJECT_ID": "neezs"
+      }
+    }
+  }
+}
