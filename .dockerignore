@@ -6,7 +6,4 @@ README.md
 .env
 .DS_Store
 *.log
-dist
-src
-tsconfig.json
 .cursor
