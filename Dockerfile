@@ -11,8 +11,8 @@ COPY tsconfig.json ./
 # Copy FastMCP framework
 COPY fastmcp/ ./fastmcp/
 
-# Install dependencies
-RUN npm install --omit=dev
+# Install dependencies (including dev dependencies for tsx)
+RUN npm install
 
 # Copy source code
 COPY neezs-ai-chatbot.ts ./
