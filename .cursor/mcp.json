@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "zep-memory": {
+      "url": "http://localhost:8000/sse",
+      "env": {
+        "PROJECT_ID": "neezs",
+        "APP_NAME": "NEEZS",
+        "USER_ID": "neezs_user_",
+        "SESSION_ID": "neezs_thread_"
+      }
+    }
+  }
+}
