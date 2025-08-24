@@ -88,7 +88,11 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       const neezsSessionId = `${currentConfig.SESSION_ID}${args.session_id}`;
       
       console.log(`NEEZS AI Chat - User: ${neezsUserId}, Session: ${neezsSessionId}`);
@@ -183,11 +187,15 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Searching NEEZS knowledge for user: ${neezsUserId}, query: ${args.query}`);
       
       const results = await zepClient.graph.search({
-        userId: neezsUserId,
+        graphId: neezsUserId,
         query: args.query,
         limit: args.limit,
       });
@@ -216,7 +224,11 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       const neezsSessionId = `${currentConfig.SESSION_ID}${args.session_id}`;
       
       console.log(`Getting NEEZS memory summary for user: ${neezsUserId}, session: ${neezsSessionId}`);
@@ -251,11 +263,15 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Creating NEEZS user: ${neezsUserId}`);
       
       const user = await zepClient.user.add({
-        userId: neezsUserId,
+        userId: args.user_id,
         firstName: args.first_name || "",
         lastName: args.last_name || "",
         email: args.email || "",
@@ -289,7 +305,11 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Getting NEEZS user: ${neezsUserId}`);
       
       const user = await zepClient.user.get(neezsUserId);
@@ -447,7 +467,11 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       const neezsSessionId = `${currentConfig.SESSION_ID}${args.session_id}`;
       
       console.log(`Creating NEEZS session: ${neezsSessionId} for user: ${neezsUserId}`);
@@ -517,13 +541,30 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Adding NEEZS memory for user: ${neezsUserId}`);
       
+      // Try to create user graph first if it doesn't exist
+      try {
+        await zepClient.graph.create({
+          graphId: neezsUserId,
+          name: `NEEZS Graph for ${neezsUserId}`,
+          description: `Knowledge graph for NEEZS user ${neezsUserId}`,
+        });
+        console.log(`Created new graph for ${neezsUserId}`);
+      } catch (createError) {
+        // Graph might already exist, continue
+        console.log(`Graph for ${neezsUserId} might already exist`);
+      }
+      
       const memory = await zepClient.graph.add({
-        userId: neezsUserId,
+        graphId: neezsUserId,
         data: args.content,
-        type: "MEMORY",
+        type: "text",
         metadata: {
           app: currentConfig.APP_NAME,
           project: currentConfig.PROJECT_ID,
@@ -557,14 +598,18 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Getting NEEZS memory for user: ${neezsUserId}, memory: ${args.memory_id}`);
       
       // Try to get memory by searching for it first
       const searchResult = await zepClient.graph.search({
-        userId: neezsUserId,
-        query: "",
-        limit: 100,
+        graphId: neezsUserId,
+        query: "*",
+        limit: 50,
       });
       
       const memory = searchResult.edges?.find(edge => edge.uuid === args.memory_id);
@@ -599,12 +644,16 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Listing NEEZS memories for user: ${neezsUserId}`);
       
       const memories = await zepClient.graph.search({
-        userId: neezsUserId,
-        query: args.memory_type || "",
+        graphId: neezsUserId,
+        query: args.memory_type || "*",
         limit: args.limit || 10,
       });
       
@@ -634,11 +683,15 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Searching NEEZS memories for user: ${neezsUserId}, query: ${args.query}`);
       
       const searchResults = await zepClient.graph.search({
-        userId: neezsUserId,
+        graphId: neezsUserId,
         query: args.query,
         limit: args.limit || 5,
         metadata: args.memory_type ? { memory_type: args.memory_type } : undefined,
@@ -668,11 +721,15 @@ server.addTool({
   },
   execute: async (args) => {
     try {
-      const neezsUserId = `${currentConfig.USER_ID}${args.user_id}`;
+      // Use user_id directly if it already contains the full ID, otherwise add prefix
+      const neezsUserId = args.user_id === 'yok' ? 'neezs_user_yok' 
+        : args.user_id.includes('neezs_user_') 
+        ? args.user_id 
+        : `${currentConfig.USER_ID}${args.user_id}`;
       console.log(`Deleting NEEZS memory for user: ${neezsUserId}, memory: ${args.memory_id}`);
       
       await zepClient.graph.delete({
-        userId: neezsUserId,
+        graphId: neezsUserId,
         memoryId: args.memory_id,
       });
       
