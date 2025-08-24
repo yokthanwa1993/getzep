@@ -1,7 +1,0 @@
-{
-  "mcpServers": {
-    "zep-memory": {
-      "url": "http://localhost:8000/sse"
-    }
-  }
-}
